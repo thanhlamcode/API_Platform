@@ -15,15 +15,18 @@ use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 use Vich\UploaderBundle\Mapping\Annotation as Vich;
 
-#[Vich\Uploadable]
+
 #[ORM\Entity]
+#[Vich\Uploadable]
 #[ApiResource(
+    normalizationContext: ['groups' => ['media_object:read']],
     types: ['https://schema.org/MediaObject'],
+    outputFormats: ['jsonld' => ['application/ld+json']],
     operations: [
         new Get(),
         new GetCollection(),
         new Post(
-            inputFormats: ['multipart' => ['multipart/form-data']], // Đảm bảo POST nhận multipart
+            inputFormats: ['multipart' => ['multipart/form-data']],
             openapi: new Model\Operation(
                 requestBody: new Model\RequestBody(
                     content: new \ArrayObject([
@@ -42,21 +45,19 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
                 )
             )
         )
-    ],
-    outputFormats: ['jsonld' => ['application/ld+json']], // Định dạng trả về là JSON-LD
-    normalizationContext: ['groups' => ['media_object:read']] // Cấu hình nhóm cho việc đọc
+    ]
 )]
 class MediaObject
 {
     #[ORM\Id, ORM\Column, ORM\GeneratedValue]
     private ?int $id = null;
 
-    #[ApiProperty(types: ['https://schema.org/contentUrl'], writable: false)] // Trả về contentUrl
+    #[ApiProperty(types: ['https://schema.org/contentUrl'], writable: false)]
     #[Groups(['media_object:read'])]
     public ?string $contentUrl = null;
 
     #[Vich\UploadableField(mapping: 'media_object', fileNameProperty: 'filePath')]
-    #[Assert\NotNull] // Xác nhận rằng file không được null
+    #[Assert\NotNull]
     public ?File $file = null;
 
     #[ApiProperty(writable: false)]
@@ -67,6 +68,4 @@ class MediaObject
     {
         return $this->id;
     }
-
-    // Các getter/setter cho file và filePath sẽ được tạo tự động bởi VichUploaderBundle
 }
