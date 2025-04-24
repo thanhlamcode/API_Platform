@@ -4,6 +4,7 @@ namespace App\Factory;
 
 use App\Entity\Book;
 use Zenstruck\Foundry\Persistence\PersistentProxyObjectFactory;
+use function Zenstruck\Foundry\lazy;
 
 /**
  * @extends PersistentProxyObjectFactory<Book>

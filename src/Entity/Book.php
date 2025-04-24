@@ -27,10 +27,6 @@ class Book
     #[ORM\Column(type: 'text')]
     public string $description = '';
 
-    /** The author of this book. */
-    #[ORM\Column]
-    public string $author = '';
-
     /** The publication date of this book. */
     #[ORM\Column]
     public ?\DateTimeImmutable $publicationDate = null;
@@ -38,6 +34,12 @@ class Book
     /** @var Review[] Available reviews for this book. */
     #[ORM\OneToMany(targetEntity: Review::class, mappedBy: 'book', cascade: ['persist', 'remove'])]
     public iterable $reviews;
+
+
+    // Mối quan hệ ManyToOne với Author
+    #[ORM\ManyToOne(targetEntity: Author::class, inversedBy: 'books')]
+    #[ORM\JoinColumn(nullable: false)] // khóa ngoaị khoong thể null
+    public ?Author $author = null;
 
     public function __construct()
     {

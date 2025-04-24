@@ -1,0 +1,7 @@
+<!-- api/phpunit.xml.dist -->
+<phpunit>
+    <!-- ... -->
+    <php>
+        <env name="KERNEL_CLASS" value="App\Kernel" />
+    </php>
+</phpunit>

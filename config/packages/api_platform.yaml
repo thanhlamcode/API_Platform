@@ -6,8 +6,7 @@ api_platform:
         cache_headers:
             vary: ['Content-Type', 'Authorization', 'Origin']
     formats:
-        jsonld: [ 'application/ld+json' ]
-        json: [ 'application/json' ]
-        multipart: ['multipart/form-data']
-    enable_docs: true        # Bật tài liệu API
-
+        jsonld: ['application/ld+json']
+        json: ['application/json']
+        multipart: ['multipart/form-data']  # Chắc chắn multipart được hỗ trợ
+    enable_docs: true

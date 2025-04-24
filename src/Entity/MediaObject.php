@@ -26,7 +26,9 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
         new Get(),
         new GetCollection(),
         new Post(
-            inputFormats: ['multipart' => ['multipart/form-data']],
+            inputFormats: [
+                'multipart' => ['multipart/form-data'], // Đảm bảo multipart được hỗ trợ
+            ],
             openapi: new Model\Operation(
                 requestBody: new Model\RequestBody(
                     content: new \ArrayObject([
@@ -36,7 +38,7 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
                                 'properties' => [
                                     'file' => [
                                         'type' => 'string',
-                                        'format' => 'binary'
+                                        'format' => 'binary', // Định dạng file tải lên
                                     ]
                                 ]
                             ]
