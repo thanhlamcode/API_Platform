@@ -10,3 +10,9 @@ api_platform:
         json: ['application/json']
         multipart: ['multipart/form-data']  # Chắc chắn multipart được hỗ trợ
     enable_docs: true
+
+    swagger:
+        api_keys:
+            bearer:
+                name: Authorization
+                type: header

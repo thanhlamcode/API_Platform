@@ -18,3 +18,5 @@ nelmio_api_doc:
                                         type: array
                                         items:
                                             type: string
+        security:
+            - bearerAuth: [ ]
