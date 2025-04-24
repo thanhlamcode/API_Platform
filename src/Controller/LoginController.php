@@ -3,7 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\User;
-use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTTokenManagerInterface; // Cập nhật import
+use Firebase\JWT\JWT;  // Thêm import Firebase JWT
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -14,18 +14,17 @@ use Doctrine\ORM\EntityManagerInterface;
 
 class LoginController extends AbstractController
 {
-    private JWTTokenManagerInterface $jwtManager;
     private UserPasswordHasherInterface $passwordHasher;
     private EntityManagerInterface $entityManager;
+    private string $secretKey; // Khóa bí mật dùng để mã hóa token
 
     public function __construct(
-        JWTTokenManagerInterface $jwtManager,
         UserPasswordHasherInterface $passwordHasher,
         EntityManagerInterface $entityManager
     ) {
-        $this->jwtManager = $jwtManager;
         $this->passwordHasher = $passwordHasher;
         $this->entityManager = $entityManager;
+        $this->secretKey = 'your_secret_key'; // Thay bằng khóa bí mật của bạn
     }
 
     public function __invoke(Request $request): JsonResponse
@@ -47,7 +46,18 @@ class LoginController extends AbstractController
         }
 
         // Tạo JWT token cho người dùng đã xác thực thành công
-        $token = $this->jwtManager->create($user);
+        $issuedAt = time();
+        $expirationTime = $issuedAt + 3600;  // Token có hiệu lực trong 1 giờ
+        $payload = [
+            "iat" => $issuedAt,
+            "exp" => $expirationTime,
+            "data" => [
+                "username" => $user->getUsername(),
+                "roles" => $user->getRoles(),
+            ]
+        ];
+
+        $token = JWT::encode($payload, $this->secretKey, 'HS256'); // Thêm tham số thuật toán
 
         return new JsonResponse(['token' => $token], Response::HTTP_OK);
     }
